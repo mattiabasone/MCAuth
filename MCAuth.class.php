@@ -2,16 +2,17 @@
 
 /*
  * class: MCAuth
- * description: Intergrate Minecraft within your own projects.
+ * description: Intergrate Minecraft in your PHP projects.
  * author: Mattia Basone
  * version: 1.0
  * info/support: mattia.basone@gmail.com
  */
 class MCAuth {
-
+    
+    const CLIENT_TOKEN = "808772fc24bc4d92ba2dc48bfecb375f";
+    
     public $account = array();
     public $autherr;
-
     
     // Generic function for cURL requests
     private function curl_request($address) {
@@ -36,6 +37,7 @@ class MCAuth {
         $json['agent']['version'] = 1;
         $json['username'] = $username;
         $json['password'] = $password;
+        $json['clientToken'] = self::CLIENT_TOKEN;
         $request = curl_init();
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($request, CURLOPT_HTTPHEADER , array('Content-Type: application/json'));
