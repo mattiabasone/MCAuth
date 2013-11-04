@@ -27,7 +27,11 @@ class MCAuth {
     
     // Check if username is premium
     public function check_premium($username) {
-        return $this->curl_request('https://www.minecraft.net/haspaid.jsp?user='.$username);
+        if ($this->curl_request('https://www.minecraft.net/haspaid.jsp?user='.$username)  == 'true') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     
     public function authenticate($username, $password) {
