@@ -3,20 +3,25 @@
  * class: MCAuth
  * description: Intergrate Minecraft in your PHP projects.
  * author: Mattia Basone
- * version: 1.2
+ * version: 1.2.1
  * info/support: mattia.basone@gmail.com
  */
+
 class MCAuth {
 
     const CLIENT_TOKEN  = '808772fc24bc4d92ba2dc48bfecb375f';
     const AUTH_URL      = 'https://authserver.mojang.com/authenticate';
     const PROFILE_URL   = 'https://api.mojang.com/profiles/page/1';
-    const USER_AGENT    = 'MCAuth 1.2';
+    const USER_AGENT    = 'MCAuth 1.2.1';
 
     public $autherr, $account = array();
     private $curlresp, $curlinfo, $curlerror;
 
-    // Generic function for cURL requests
+    /**
+     * Generic function for cURL requests
+     * @param $address
+     * @return mixed
+     */
     private function curl_request($address) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_HEADER, 0);
@@ -30,7 +35,12 @@ class MCAuth {
         return $result;
     }
 
-    //  Execute a POST request with JSON data
+    /**
+     * Execute a POST request with JSON data
+     * @param $url
+     * @param $array
+     * @return bool
+     */
     private function curl_json($url, $array) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
@@ -43,18 +53,19 @@ class MCAuth {
         $response = curl_exec($request);
         $this->curlinfo = curl_getinfo($request);
         $this->curlerror = curl_error($request);
+        $this->curlresp = json_decode($response);
         curl_close($request);
-        $rjson = json_decode($response);
         if ($this->curlinfo['http_code'] == '200') {
-            $this->curlresp = $rjson;
             return TRUE;
-        } else {
-            $this->curlresp = NULL;
-            return FALSE;
         }
+        return FALSE;
     }
 
-    // Allowed characters for username
+    /**
+     * Allowed characters for username
+     * @param $username
+     * @return bool
+     */
     private function check_username($username) {
         if (preg_match('#[^a-zA-Z0-9_]+#', $username)) {
             return FALSE;
@@ -63,7 +74,11 @@ class MCAuth {
         }
     }
 
-    // Check if username is premium
+    /**
+     * Check if username is premium
+     * @param $username
+     * @return bool
+     */
     public function check_pemium($username) {
         if ($this->curl_request('https://www.minecraft.net/haspaid.jsp?user='.$username)  == 'true') {
             return TRUE;
@@ -72,7 +87,12 @@ class MCAuth {
         }
     }
 
-    // Authentication
+    /**
+     * Authentication
+     * @param $username
+     * @param $password
+     * @return bool
+     */
     public function authenticate($username, $password) {
         // json array for POST authentication
         $json = array();
@@ -81,7 +101,7 @@ class MCAuth {
         $json['username'] = $username;
         $json['password'] = $password;
         $json['clientToken'] = self::CLIENT_TOKEN;
-        if ($this->curl_json(self::AUTH_URL, $json) === TRUE) {
+        if ($this->curl_json(self::AUTH_URL, $json)) {
             if (!isset($this->curlresp->error) AND isset($this->curlresp->selectedProfile->name)) {
                 $this->account['id'] = $this->curlresp->selectedProfile->id;
                 $this->account['username'] = $this->curlresp->selectedProfile->name;
@@ -90,24 +110,26 @@ class MCAuth {
                 return TRUE;
             } else {
                 $this->autherr = $this->curlresp->errorMessage;
-                return FALSE;
             }
         } else {
             if (isset($this->curlresp->error)) {
                 $this->autherr = $this->curlresp->errorMessage;
-                return FALSE;
             } else {
                 if (isset($this->curlerror)) {
                     $this->autherr = $this->curlerror;
                 } else {
                     $this->autherr = 'Server unreacheable';
                 }
-                return FALSE;
             }
         }
+        return FALSE;
     }
 
-    // Get correct username and minecraft id from username (NOT email, case insensitive)
+    /**
+     * Get correct username and minecraft id from username (NOT email, case insensitive)
+     * @param $username
+     * @return bool
+     */
     public function get_user_info($username) {
         if ($this->check_username($username) === TRUE) {
             $p_array['agent'] = 'Minecraft';
