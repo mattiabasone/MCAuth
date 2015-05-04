@@ -3,7 +3,7 @@ MCAuth
 
 Minecraft PHP Authentication for new Mojang Yggdrasil (http://wiki.vg/Authentication) authentication scheme 
 
-Example:
+####Example:
 
 ```php
 <?php
@@ -16,5 +16,8 @@ if ($MCAuth->authenticate('username or email', 'password') == TRUE) {
 } else {
 	echo $MCAuth->autherr;					// print error
 }
-?>
 ```
+
+####Warning!
+Mojang authentication system permits only one active session, as reported  in the wiki: 
+"Only the one with the latest session ID for your account are allowed to join servers.", so you will be disconnected from the server where you are playing if you try to login via MCAuth
