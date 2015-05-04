@@ -19,5 +19,5 @@ if ($MCAuth->authenticate('username or email', 'password') == TRUE) {
 ```
 
 ####Warning!
-Mojang authentication system permits only one active session, as reported  in the wiki: 
-"Only the one with the latest session ID for your account are allowed to join servers.", so you will be disconnected from the server where you are playing if you try to login via MCAuth
+Mojang authentication system permits only one active session as reported in the wiki: 
+"Only the one with the latest session ID for your account are allowed to join servers.", so you will be disconnected from the server where you are playing if you try to login via MCAuth.
