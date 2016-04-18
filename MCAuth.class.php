@@ -109,7 +109,7 @@ class MCAuth {
      * @param $username
      * @return bool
      */
-    public function check_pemium($username) {
+    public function check_premium($username) {
         if ($this->curl_request(self::HASPAID_URL.$username)) {
             if ($this->curlresp == 'true') {
                 return TRUE;
