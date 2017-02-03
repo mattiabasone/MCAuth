@@ -2,7 +2,7 @@
   "name": "mattiabasone/mc-auth",
   "description": "Minecraft PHP Authentication for Mojang Yggdrasil authentication scheme.",
   "type": "library",
-  "license": "BSD",
+  "license": "BSD-4-Clause",
   "keywords": ["minecraft", "auth"],
   "homepage": "https://github.com/mattiabasone/MCAuth",
   "authors": [
