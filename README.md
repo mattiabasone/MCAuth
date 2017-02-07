@@ -39,8 +39,8 @@ try {
 Get username from UUID
 ```php
 try {
-    $uuid = $MCAuth->uuidToUsername("be1cac3b60f04e0dba12c77cc8e0ec21");
-    var_dump($uuid);
+    $username = $MCAuth->uuidToUsername("be1cac3b60f04e0dba12c77cc8e0ec21");
+    var_dump($username);
 } catch (Exception $e) {
     echo $e->getMessage();
 }
